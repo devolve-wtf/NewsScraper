@@ -1,7 +1,7 @@
 <nav class="container">
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link active" href="#">Active</a>
+            <a class="nav-link{{#if isHome}} active{{/if}}" href="/">Home</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#">Link</a>
@@ -10,7 +10,7 @@
             <a class="nav-link" href="#">Link</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link disabled" href="#">Disabled</a>
+            <a class="nav-link{{#if isAbout}} active{{/if}}" href="/about">About</a>
         </li>
     </ul>
 </nav>

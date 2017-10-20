@@ -5,4 +5,11 @@ module.exports = (app) => {
             isHome: true
         });
     });
+
+    app.get('/about', (req, res) => {
+        res.render('about', {
+            pageTitle: 'About News Scraper',
+            isAbout: true
+        });
+    });
 }
