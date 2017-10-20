@@ -2,9 +2,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const exphbs = require('express-handlebars');
 const path = require('path');
+const mongoose = require('mongoose');
 
-const app = express();
+const axios = require('axios');
+const cheerio = require('cheerio');
+
+const models = require('./models');
+
 const PORT = process.env.PORT || 8080;
+const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -27,6 +33,11 @@ app.engine('hbs', exphbs(
 ));
 
 app.set('view engine', '.hbs');
+
+mongoose.Promise = Promise;
+mongoose.connect('mongodb://localhost/NewsScraper', {
+    useMongoClient: true
+});
 
 require('./routes')(app);
 
