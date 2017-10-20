@@ -1,5 +1,8 @@
 module.exports = (app) => {
     app.get('/', (req, res) => {
-        res.send('hello world');
+        res.render('index', {
+            pageTitle: 'News Scraper',
+            isHome: true
+        });
     });
 }
