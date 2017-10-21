@@ -18,13 +18,13 @@ module.exports = (app) => {
     });
 
     app.get('/scrape', (req, res) => {
-        axios.get('http://www.echojs.com/').then(response => {
+        axios.get('https://www.suavecito.com/blogs/daily-digest').then(response => {
             let $ = cheerio.load(response.data);
 
-            $('article h2').each(function(i, element) {
+            $('.the-post-title').each(function(i, element) {
                 let result = {};
 
-                result.title = $(this).children('a').text();
+                result.title = $(this).children('a').children('h2').text();
                 result.link = $(this).children('a').attr('href');
 
                 models.Article.create(result).then(data => {
@@ -38,7 +38,11 @@ module.exports = (app) => {
 
     app.get('/articles', (req, res) => {
         models.Article.find({}).then(data => {
-            res.json(data);
+            res.render('articles', {
+                articles: data,
+                pageTitle: 'Articles',
+                isArticles: true
+            });
         }).catch(error => {
             res.json(error);
         });
