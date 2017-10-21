@@ -21,11 +21,18 @@ module.exports = (app) => {
         axios.get('https://www.suavecito.com/blogs/daily-digest').then(response => {
             let $ = cheerio.load(response.data);
 
-            $('.the-post-title').each(function(i, element) {
+            $('.wrap').each(function(i, element) {
                 let result = {};
 
-                result.title = $(this).children('a').children('h2').text();
-                result.link = $(this).children('a').attr('href');
+                let title = $(this).children('.the-post-title').children('a').children('h2').text();
+                let link = $(this).children('.the-post-title').children('a').attr('href');
+                let summary = $(this).children('.excerpt').children('.rte').children('p').text();
+
+                console.log(summary);
+
+                result.title = title;
+                result.link = 'https://www.suavecito.com' + link;
+                result.summary = summary;
 
                 models.Article.create(result).then(data => {
                     res.json(data);

@@ -1,7 +1,14 @@
 {{>header}}
-<h2>the news</h2>
-<script>
-    var articles = {{articles}};
-    console.log(articles);
-</script>
+<div class="container">
+    <h2>the news</h2>
+    {{#each articles}}
+    <div class="card mb-2">
+        <div class="card-body">
+            <h4 class="card-title">{{title}}</h4>
+            <p class="card-text">{{summary}}</p>
+            <a href="{{link}}">Read More</a>
+        </div>
+    </div>
+    {{/each}}
+</div>
 {{>footer}}
