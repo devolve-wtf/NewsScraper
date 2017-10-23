@@ -53,5 +53,15 @@ module.exports = (app) => {
         }).catch(error => {
             res.json(error);
         });
-    })
+    });
+
+    app.post('/articles/:id', function(req, res) {
+        models.Comment.create(req.body).then(comment => {
+            return models.Article.findOneAndUpdate({ _id: req.params.id }, {comment: comment._id }, {new: true});
+        }).then(article => {
+            res.json(article);
+        }).catch(error => {
+            res.json(error);
+        });
+    });
 }
