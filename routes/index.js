@@ -58,13 +58,18 @@ module.exports = (app) => {
     app.post('/articles/:id', function(req, res) {
         console.log(req.body);
         models.Comment.create(req.body).then(newComment => {
-            console.log(newComment)
             return models.Article.findOneAndUpdate({ _id: req.params.id }, {$push:{comment: newComment._id }}, {new: true});
         }).then(article => {
-            console.log(article);
             res.json(article);
         }).catch(error => {
             res.json(error);
+        });
+    });
+
+    app.post('/delete/:id', function(req, res) {
+        models.Comment.deleteOne({_id: req.params.id}).then(data => {
+            console.log(data.deletedCount + ' deleted');
+            res.send('deleted');
         });
     });
 }

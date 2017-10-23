@@ -27,9 +27,11 @@
     document.addEventListener('DOMContentLoaded', function() {
 
         var postID;
+        var $Footer;
 
         $('.open-comment-modal').on('click', function() {
             postID = $(this).attr('data-id');
+            $Footer = $(this).parent('.card-body').siblings('.card-footer');
         });
 
         $('#PostNewComment').on('click', function() {
@@ -37,8 +39,23 @@
 
             $.post('/articles/' + postID, {body: comment}, function() {
                 console.log(comment);
+            }).done(function(data) {
+                console.log(data);
+                $Footer.append('<p>' + comment + '</p>');
+                $('#CommentModal').modal('toggle');
             });
-        })
+        });
+
+        $('.delete-comment').on('click', function() {
+            var id = $(this).attr('data-comment-id');
+
+            $.post('/delete/' + id, {}, function() {
+                console.log('comment ' + id + ' deleted');
+            }).done(function(data) {
+                console.log(data);
+                $(this).parent('p').remove();
+            })
+        });
 
     });
 </script>

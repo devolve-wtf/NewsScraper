@@ -6,13 +6,17 @@
         <div class="card-body">
             <h4 class="card-title">{{title}}</h4>
             <p class="card-text">{{summary}}</p>
-            <a href="{{link}}">Read More</a>
+            <a href="{{link}}">Read More &rarr;</a>
+            <span> | </span>
             <a href="#" class="open-comment-modal" data-id="{{id}}" data-toggle="modal" data-target="#CommentModal">Comment</a>
         </div>
         <div class="card-footer">
-            {{#each comment}}
-            <p>{{body}}</p>
-            {{/each}}
+            <p class="text-right"><a class="collapsed" data-toggle="collapse" href="#CommentSet-{{@index}}" aria-expanded="false" aria-controls="CommentSet-{{@index}}">view comments ({{comment.length}})</a></p>
+            <div id="CommentSet-{{@index}}" class="collapse">
+                {{#each comment}}
+                <p><a href="#" class="delete-comment" data-comment-id="{{this.id}}">DELETE</a> | {{body}}</p>
+                {{/each}}
+            </div>
         </div>
     </div>
     {{/each}}
