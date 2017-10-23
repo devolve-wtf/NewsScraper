@@ -44,7 +44,7 @@ module.exports = (app) => {
     });
 
     app.get('/articles', (req, res) => {
-        models.Article.find({}).then(data => {
+        models.Article.find({}).populate('comment').then(data => {
             res.render('articles', {
                 articles: data,
                 pageTitle: 'Articles',
@@ -56,9 +56,12 @@ module.exports = (app) => {
     });
 
     app.post('/articles/:id', function(req, res) {
-        models.Comment.create(req.body).then(comment => {
-            return models.Article.findOneAndUpdate({ _id: req.params.id }, {comment: comment._id }, {new: true});
+        console.log(req.body);
+        models.Comment.create(req.body).then(newComment => {
+            console.log(newComment)
+            return models.Article.findOneAndUpdate({ _id: req.params.id }, {$push:{comment: newComment._id }}, {new: true});
         }).then(article => {
+            console.log(article);
             res.json(article);
         }).catch(error => {
             res.json(error);

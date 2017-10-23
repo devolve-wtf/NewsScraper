@@ -7,8 +7,15 @@
             <h4 class="card-title">{{title}}</h4>
             <p class="card-text">{{summary}}</p>
             <a href="{{link}}">Read More</a>
+            <a href="#" class="open-comment-modal" data-id="{{id}}" data-toggle="modal" data-target="#CommentModal">Comment</a>
+        </div>
+        <div class="card-footer">
+            {{#each comment}}
+            <p>{{body}}</p>
+            {{/each}}
         </div>
     </div>
     {{/each}}
 </div>
+{{>modal}}
 {{>footer}}
