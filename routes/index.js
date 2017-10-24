@@ -60,7 +60,7 @@ module.exports = (app) => {
         models.Comment.create(req.body).then(newComment => {
             return models.Article.findOneAndUpdate({ _id: req.params.id }, {$push:{comment: newComment._id }}, {new: true});
         }).then(article => {
-            res.json(article);
+            res.send(article.comment[article.comment.length - 1]);
         }).catch(error => {
             res.json(error);
         });
@@ -69,7 +69,11 @@ module.exports = (app) => {
     app.post('/delete/:id', function(req, res) {
         models.Comment.deleteOne({_id: req.params.id}).then(data => {
             console.log(data.deletedCount + ' deleted');
-            res.send('deleted');
-        });
+            console.log(req.body.articleID);
+            return models.Article.findOneAndUpdate({ _id: req.body.articleID }, { $pull: { comment: req.params.id } });
+        }).then(data => {
+            res.send(`Deleted comment {req.params.id} from article {req.body.articleID}`);
+            console.log(`Deleted comment {req.params.id} from article {req.body.articleID}`);
+        })
     });
 }

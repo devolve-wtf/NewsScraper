@@ -11,10 +11,10 @@
             <a href="#" class="open-comment-modal" data-id="{{id}}" data-toggle="modal" data-target="#CommentModal">Comment</a>
         </div>
         <div class="card-footer">
-            <p class="text-right"><a class="collapsed" data-toggle="collapse" href="#CommentSet-{{@index}}" aria-expanded="false" aria-controls="CommentSet-{{@index}}">view comments ({{comment.length}})</a></p>
+            <p class="view-comments text-right"><a class="collapsed" data-toggle="collapse" href="#CommentSet-{{@index}}" aria-expanded="false" aria-controls="CommentSet-{{@index}}">view comments (<span class="comments-length">{{comment.length}}</span>)</a></p>
             <div id="CommentSet-{{@index}}" class="collapse">
                 {{#each comment}}
-                <p><a href="#" class="delete-comment" data-comment-id="{{this.id}}">DELETE</a> | {{body}}</p>
+                <p><a href="#" class="delete-comment" data-article-id="{{../id}}" data-comment-id="{{this.id}}">DELETE</a> | {{body}}</p>
                 {{/each}}
             </div>
         </div>
