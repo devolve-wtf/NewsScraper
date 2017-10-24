@@ -35,7 +35,7 @@ app.engine('hbs', exphbs(
 app.set('view engine', '.hbs');
 
 mongoose.Promise = Promise;
-mongoose.connect('mongodb://localhost/NewsScraper', {
+mongoose.connect('mongodb://localhost/NewsScraper2', {
     useMongoClient: true
 });
 

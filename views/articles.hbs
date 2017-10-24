@@ -1,14 +1,82 @@
 {{>header}}
 <div class="container">
-    <h2>the news</h2>
+    <h1 class="text-center">the news</h2>
     {{#each articles}}
     <div class="card mb-2">
         <div class="card-body">
             <h4 class="card-title">{{title}}</h4>
             <p class="card-text">{{summary}}</p>
-            <a href="{{link}}">Read More</a>
+            <a href="{{link}}">Read More &rarr;</a>
+            <span> | </span>
+            <a href="#" class="open-comment-modal" data-id="{{id}}" data-toggle="modal" data-target="#CommentModal">Comment</a>
+        </div>
+        <div class="card-footer">
+            <p class="view-comments text-right"><a class="collapsed" data-toggle="collapse" href="#CommentSet-{{@index}}" aria-expanded="false" aria-controls="CommentSet-{{@index}}">view comments (<span class="comments-length">{{comment.length}}</span>)</a></p>
+            <div id="CommentSet-{{@index}}" class="collapse">
+                {{#each comment}}
+                <p><a href="#" class="delete-comment" data-article-id="{{../id}}" data-comment-id="{{this.id}}">DELETE</a> | {{body}}</p>
+                {{/each}}
+            </div>
         </div>
     </div>
     {{/each}}
 </div>
+{{>modal}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        var postID;
+        var $Footer;
+
+        $('.delete-comment').on('click', deleteComment);
+
+        $('.open-comment-modal').on('click', function() {
+            postID = $(this).attr('data-id');
+            $Footer = $(this).parent('.card-body').siblings('.card-footer');
+        });
+
+        $('#PostNewComment').on('click', function() {
+            var comment = $('#NewCommentBody').val();
+            var $CommentsLength = $Footer.find('.comments-length');
+            var numberOfComments = ($CommentsLength.text() * 1) + 1;
+
+            $.post('/articles/' + postID, {body: comment}, function() {
+                console.log(comment);
+            }).done(function(commentID) {
+
+                $Footer.find('.collapse').append('<p><a href="#" class="delete-comment" data-article-id="' + postID + '" data-comment-id="' + commentID + '">DELETE</a> | ' + comment + '</p>');
+                $Footer.find('.collapsed').attr('aria-expanded', true).removeClass('collapsed');
+                $Footer.find('.collapse').addClass('show');
+
+                $('#CommentModal').modal('toggle');
+                $('#NewCommentBody').val('');
+
+                $CommentsLength.text(numberOfComments);
+
+                $('.delete-comment').off('click', '**');
+                $('.delete-comment').on('click', deleteComment);
+            });
+        });
+
+        function deleteComment() {
+
+            var id = $(this).attr('data-comment-id');
+            var articleID = $(this).attr('data-article-id');
+            var $P = $(this).parent('p');
+            var $CommentsLength = $(this).parents('.collapse').siblings('.view-comments').find('.comments-length');
+            var numberOfComments = ($CommentsLength.text() * 1) - 1;
+
+            console.log($CommentsLength.text(), numberOfComments);
+
+            $.post('/delete/' + id, {articleID: articleID}, function() {
+                console.log('comment ' + id + ' deleted'); 
+            }).done(function(data) {
+                console.log(data);
+                $P.remove();
+                $CommentsLength.text(numberOfComments);
+            });
+        }
+
+    });
+</script>
 {{>footer}}

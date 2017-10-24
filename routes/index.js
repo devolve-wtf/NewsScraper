@@ -44,7 +44,7 @@ module.exports = (app) => {
     });
 
     app.get('/articles', (req, res) => {
-        models.Article.find({}).then(data => {
+        models.Article.find({}).populate('comment').then(data => {
             res.render('articles', {
                 articles: data,
                 pageTitle: 'Articles',
@@ -53,5 +53,27 @@ module.exports = (app) => {
         }).catch(error => {
             res.json(error);
         });
-    })
+    });
+
+    app.post('/articles/:id', function(req, res) {
+        console.log(req.body);
+        models.Comment.create(req.body).then(newComment => {
+            return models.Article.findOneAndUpdate({ _id: req.params.id }, {$push:{comment: newComment._id }}, {new: true});
+        }).then(article => {
+            res.send(article.comment[article.comment.length - 1]);
+        }).catch(error => {
+            res.json(error);
+        });
+    });
+
+    app.post('/delete/:id', function(req, res) {
+        models.Comment.deleteOne({_id: req.params.id}).then(data => {
+            console.log(data.deletedCount + ' deleted');
+            console.log(req.body.articleID);
+            return models.Article.findOneAndUpdate({ _id: req.body.articleID }, { $pull: { comment: req.params.id } });
+        }).then(data => {
+            res.send(`Deleted comment {req.params.id} from article {req.body.articleID}`);
+            console.log(`Deleted comment {req.params.id} from article {req.body.articleID}`);
+        })
+    });
 }
